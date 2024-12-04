@@ -1,0 +1,7 @@
+boulette ;
+boulette : 1
+ognon 9
+pain_burger 10
+steak_hache 8
+tranche_fromage 10
+;

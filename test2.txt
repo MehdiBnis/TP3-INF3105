@@ -1,0 +1,24 @@
+recette Recette0 tomate 1 carotteriz 3
+yogourt 2 romarin 1 lait 3 ;
+recette Recette1 kiwi 2 ananas 2
+céleri 1 romarin 2 yogourt 3 ;
+recette Recette2 framboises 3 leetchi 3
+ananas 2 carotteriz 3 persil 1 ;
+ajout lait 18 2022-03-25
+ajout carotteriz 13 2022-06-20
+ajout lait 15 2022-01-14
+ajout yogourt 16 2022-04-23
+ajout romarin 10 2022-08-18
+ajout persil 18 2022-04-13
+ajout framboises 16 2022-01-29
+ajout pommes 16 2022-01-29
+ajout tomate 16 2022-04-29
+ajout raisins 11 2022-03-16
+ajout céleri 11 2022-05-27
+ajout ananas 13 2022-07-15
+ajout kiwi 11 2022-03-19
+ajout framboises 18 2022-03-25
+affichage
+recommandation
+utilisation Recette0
+affichage

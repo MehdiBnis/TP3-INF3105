@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="Florent Avellaneda"></meta>
+<title>INF3105 | TP2</title>
+<style>
+
+    header{
+        background-color: #0d57a1;
+        padding: 8px;
+        color: white;
+        font-size: 110%;
+    }
+    footer{
+        padding: 3px;
+        margin-top: 1em;
+        color: white;
+        background-color: #0d57a1;
+    }
+    body{
+        margin: 0;
+    }
+    div.contenu{
+        padding: 3px;
+        margin: 3px;
+    }
+    h1{
+        text-align: center;
+        border-bottom: solid 1px;
+        font-variant: small-caps;
+    /*    color: #0d57a1;*/
+    }
+    h2{
+        text-align: left;
+        border-top: dotted 2px gray;
+        font-variant: small-caps;
+    }
+
+    table{
+        border-collapse: collapse;
+        border: 1px solid #000;
+        vertical-align: top;
+    /*    width: 100%;*/
+    }
+    td{
+        border: 1px solid #000;
+        padding: 2px;
+        vertical-align: top;
+        text-align: left;
+    }
+    th{
+        border: 1px solid #666;
+        padding: 2px;
+        text-align: left;
+        vertical-align: top;
+        background-color: lightgray;
+    }
+    table.calendrier th:nth-child(3){
+        width: 60%;
+    }
+    table.calendrier th:nth-child(4){
+        width: 20%;
+    }
+
+    tr.semaine_impaire{
+        background-color: #efe;
+        background-color: #fff;
+    }
+    tr.semaine_paire{
+        background-color: #eee;
+    }
+
+    table.calendrier td.courante {
+        background-color: #0d57a1;
+        color: white;
+    }
+
+
+    div.equipe{
+        border: solid 0px;
+        border-color: gray;
+        margin-left:auto;
+        margin:0 auto;
+        vertical-align: top;
+    }
+    div.equipe > div.groupe{
+        //border: solid 1px #999;
+        background-color: #eee;
+        //border-radius: 0.5em;
+        border-left: solid 6px #0d57a1;
+        border: solid 1 2 3 4 #0d57a1;
+        padding: 5px;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 2em;
+        display: inline-block;
+        vertical-align: top;"
+    }
+    div.equipe > div.groupe>h3{
+        border-bottom: dashed 1px gray;
+    }
+
+
+    .nouveau{
+        background-color: rgb(153,255, 153);
+    }
+
+    @media print
+    {
+        .noPrint
+        {
+            display:none;
+        }
+    }
+
+    ul{
+        margin-top: 0px;
+        padding-left: 2em;
+
+    }
+
+    table.donnees  tr  td:nth-child(n+2) {
+        text-align: right;
+    }
+
+    div #accesrapide {
+       text-align: right;
+       right: 0px;
+    }
+
+    div #accesrapide p {
+       background-color: #eee;
+       padding: 5px;
+       display: inline;
+    }
+
+    div #accesrapide p a {
+       background-color: LightBlue;
+       border: solid 1px blue;
+       padding: 2px;
+       display: inline;
+    }
+
+    div #accesrapide p a.courante {
+       background-color: #0d57a1;
+       border: solid 1px blue;
+       color: white;
+       padding: 2px;
+       display: inline;
+    }
+
+
+    header > div{
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+    }
+
+    pre{
+        padding: 5px;
+        background-color: #d7eef4;
+        color: black;
+        line-height: 110%;
+        border: 1px solid #0d57a1;
+        border-left: 6px solid #0d57a1;
+    }
+
+    h1{
+        border: 0;
+    }
+
+
+    h1:not(.autres) {
+        counter-reset: H2;
+    }
+
+
+    h2{
+        counter-reset: H3;
+    }
+
+    h3{
+        counter-reset: H4;
+    }
+
+    h2:before {
+        content: counter(H2) ". ";
+        counter-increment: H2;
+    }
+
+    h3:before {
+      content: counter(H2) "." counter(H3) " ";
+      counter-increment: H3;
+    }
+
+    h4:before {
+      content: counter(H2) "." counter(H3) "." counter(H4) " ";
+      counter-increment: H4;
+    }
+
+    code{
+        background-color: #d7eef4;
+    }
+
+    table.grilleevaluation  tr  td:nth-child(3) {
+        text-align: center;
+    }
+
+    table.grilleevaluation  tr  th:nth-child(3) {
+        text-align: center;
+    }
+
+
+    </style>
+</head>
+<body>
+
+<header>
+<div>
+<b>INF3105 — Structures de données et algorithmes</b>
+<br>
+Automne 2024
+</div>
+<div style="text-align: right; position: absolute; right: 1em">
+UQAM
+<br>
+Département d'informatique
+</div>
+</header>
+
+
+<h1 alignx=center>
+Travail pratique #2 : Réfrigérateur intelligent
+</h1>
+
+<div align="right" class="noPrint">
+<img src="resto_assiette.jpg" alt="assiette dans un restaurant" height="135px">
+</div>
+
+<div class="contenu">
+
+<h2>Objectifs</h2>
+<ol>
+ <li>Implémenter un type générique d'arbres binaires de recherche de type AVL et un ArbreMap.</li>
+ <li>Appliquer les arbres binaires de recherche et les maps à une problématique.</li>
+ <li>Écrire un programme efficace en temps et en mémoire.</li>
+</ol>
+
+<h2>Problématique</h2>
+<p>
+Vous devez concevoir un programme en C++ nommé <code>tp2</code> pour gérer l'inventaire des ingrédients d'un réfrigérateur intelligent.
+Le programme recevra un flux de commandes en entrée. Il existe six types de commandes dans ce TP :
+</p>
+<ol>
+<li>l'<b>ajout</b> d'un produit (nom, quantité, date de péremption);</li>
+<li>le <b>retrait</b> d'un produit (nom, quantité);</li>
+<li>la spécification d'une <b>recette</b> (liste d'ingrédients);</li>
+<li>la <b>recommandation</b> de recettes utilisant l'ingrédient dont la date de péremption est la plus proche;</li>
+<li>l'<b>utilisation</b> des ingrédients d'une recette;</li>
+<li>l'<b>affichage</b> des produits disponibles.</li>
+</ol>
+
+<h2>Structure du programme</h2>
+<p>
+Un squelette de départ est fourni dans <a href="tp2.zip">tp2.zip</a>, mais son utilisation est optionnelle.
+</p>
+
+<h3>Syntaxe d'appel du programme tp2</h3>
+<p>
+Le programme doit être exécuté en ligne de commande avec la syntaxe suivante :
+</p>
+<blockquote>
+<pre>./tp2 [nomfichier]</pre>
+</blockquote>
+<p>
+où <tt>nomfichier</tt> est facultatif.
+</p>
+<p>
+Si <tt>nomfichier</tt> est spécifié, le programme doit lire les commandes à partir de ce fichier via un flux de lecture C++ (<code>std::ifstream</code>).
+Sinon, les commandes seront lues depuis l'entrée standard (<code>std::cin</code>).
+Le squelette fourni prend déjà en charge ces options.
+</p>
+<p>
+Les résultats doivent être affichés sur la sortie standard (<code>std::cout</code>).
+</p>
+
+<h3>Format d'entrée et de sortie</h3>
+<p>
+Le flux d'entrée sera constitué d'une suite de commandes. Chaque commande commence par un mot-clé précisant son type :
+</p>
+
+<table border="1" cellpadding="2" cellspacing="1">
+<tr  valign="top">
+<th>Commande</th>
+<th>Syntaxe et description</th>
+<th>Exemple d'entrée</th>
+<th>Exemple de sortie</th>
+</tr>
+
+<tr valign="top">
+<td><b>recette</b></td>
+<td>
+<pre>
+"recette" nom_recette
+(nom_ingredient quantite)*
+";"
+</pre>
+<p>
+Ajoute ou met à jour la recette <tt>nom_recette</tt> dans la base de données des recettes.
+Les recettes peuvent être stockées dans une structure de type dictionnaire (<i>map</i>).
+Une recette est composée d'une liste d'ingrédients.<br>
+<span class="nouveau">Si un ingrédient apparaît plusieurs fois, vous devez additionner les quantités.</span>
+</p>
+<p>
+Cette commande ne produit aucun affichage.
+</p>
+</td>
+<td>
+<pre>
+recette burger
+pain_burger 1
+tranche_fromage 1
+steak_hache 1
+;
+</pre>
+</td>
+<td>
+<pre>
+</pre>
+</td>
+</tr>
+
+
+<tr valign="top">
+<td><b>ajout</b></td>
+<td>
+<pre>
+"ajout" nom_ingredient quantite date_expiration
+</pre>
+<p>
+Ajoute un ingrédient à la base de données. Un même ingrédient peut être ajouté plusieurs fois avec des dates d'expiration différentes.
+</p>
+<p>
+Cette commande ne produit aucun affichage.
+</p>
+</td>
+<td>
+<pre>
+ajout pain_burger 10 2022-01-05
+</pre>
+</td>
+<td>
+<pre></pre>
+</td>
+</tr>
+
+<tr valign="top">
+<td><b>retrait</b></td>
+<td>
+<pre>
+"retrait" nom_ingredient quantite
+</pre>
+<p>
+Supprime la quantité indiquée d'ingrédients en priorisant ceux dont la date d'expiration est la plus proche. 
+<span class="nouveau">On suppose que la quantité à retirer est toujours inférieure ou égale à celle présente dans le réfrigérateur.</span>
+</p>
+<p>
+Cette commande ne produit aucun affichage.
+</p>
+</td>
+<td>
+<pre>
+retrait pain_burger 2
+</pre>
+</td>
+<td>
+<pre></pre>
+</td>
+</tr>
+
+<tr valign="top">
+<td><b>recommandation</b></td>
+<td>
+<pre>
+"recommandation"
+</pre>
+<p>
+Affiche les recettes réalisables avec un ingrédient qui expirera en premier (attention, plusieurs ingrédients peuvent périmer en même temps). Une même recette ne peut apparaître qu'une fois, même si elle contient plusieurs ingrédients proches de la date de péremption.
+<span class="nouveau">Si aucune recette n'est possible avec cet ingrédient, passez à l'ingrédient suivant dans l'ordre des dates d'expiration.</span>
+</p>
+<p>
+Les noms des recettes sont affichés, suivis d'un point-virgule.
+</p>
+</td>
+<td>
+<pre>
+recommandation
+</pre>
+</td>
+<td>
+<pre>
+burger salade couscous ;
+</pre>
+</td>
+</tr>
+
+
+<tr valign="top">
+<td><b>utilisation</b></td>
+<td>
+<pre>
+"utilisation" nom_recette
+</pre>
+<p>
+Utilise les ingrédients nécessaires à la recette, en priorisant ceux dont la date de péremption est la plus proche.
+</p>
+<p>
+Affiche <tt>nom_recette : 1</tt> si tous les ingrédients sont disponibles, sinon <tt>nom_recette : 0</tt>.</p>
+</td>
+<td>
+<pre>
+utilisation burger
+</pre>
+</td>
+<td>
+<pre>
+burger : 1
+</pre>
+</td>
+</tr>
+
+
+<tr valign="top">
+<td><b>affichage</b></td>
+<td>
+<pre>
+"affichage"
+</pre>
+<p>
+Affiche la liste des ingrédients par ordre alphabétique, suivie d'un point-virgule.
+</p>
+<p>
+Affichage : (nom_ingredient quantite)* ";"</p>
+</td>
+<td>
+<pre>
+affichage
+</pre>
+</td>
+<td>
+<pre>
+pain_burger 2
+steak_hache 1
+tranche_fromage 4
+;
+</pre>
+</td>
+</tr>
+
+
+
+</table>
+
+
+
+
+
+
+
+<h3>Traitement en continue</h3>
+Le TP2 doit traiter les commandes de manière séquentielle, dès leur lecture, comme si elles étaient exécutées en temps réel. Il ne faut pas lire toutes les commandes avant de commencer leur traitement.
+</p>
+
+<p>
+Le <i>parsing</i> des commandes se fera via <code>std::cin</code>, avec au moins un espace après chaque élément.
+</p>
+
+<h3>Exemples d'entrée et de sortie</h3>
+
+<table border="1">
+<tr>
+<td><a href="test1.txt">test1.txt</a></td>
+<td><a href="test1sol.txt">test1sol.txt</a></td>
+</tr>
+<tr valign="top">
+<td>
+<pre>
+recette burger pain_burger 1 tranche_fromage 1 steak_hache 1 ;
+recette boulette steak_hache 2 ognon 1 ;
+ajout steak_hache 10 2021-12-01
+ajout ognon 5 2021-11-01
+ajout pain_burger 10 2021-11-20
+ajout ognon 5 2021-12-25
+ajout tranche_fromage 10 2021-11-10
+recommandation
+utilisation boulette
+affichage
+</pre>
+[...]
+</td>
+<td>
+<pre>
+boulette ;
+boulette : 1
+ognon 9
+pain_burger 10
+steak_hache 8
+tranche_fromage 10
+;
+</pre>
+[...]
+</td>
+</tr>
+</table>
+
+
+<table border="1">
+<tr>
+<td><a href="test2.txt">test2.txt</a></td>
+<td><a href="test2sol.txt">test2sol.txt</a></td>
+</tr>
+<tr valign="top">
+<td>
+<pre>
+recette Recette0 tomate 1 carotteriz 3
+yogourt 2 romarin 1 lait 3 ;
+recette Recette1 kiwi 2 ananas 2
+céleri 1 romarin 2 yogourt 3 ;
+recette Recette2 framboises 3 leetchi 3
+ananas 2 carotteriz 3 persil 1 ;
+ajout lait 18 2022-03-25
+ajout carotteriz 13 2022-06-20
+ajout lait 15 2022-01-14
+ajout yogourt 16 2022-04-23
+ajout romarin 10 2022-08-18
+ajout persil 18 2022-04-13
+ajout framboises 16 2022-01-29
+ajout pommes 16 2022-01-29
+ajout tomate 16 2022-04-29
+ajout raisins 11 2022-03-16
+ajout céleri 11 2022-05-27
+ajout ananas 13 2022-07-15
+ajout kiwi 11 2022-03-19
+ajout framboises 18 2022-03-25
+affichage
+recommandation
+utilisation Recette0
+affichage
+</pre>
+[...]
+</td>
+<td>
+<pre>
+ananas 13
+carotteriz 13
+céleri 11
+framboises 34
+kiwi 11
+lait 33
+persil 18
+pommes 16
+raisins 11
+romarin 10
+tomate 16
+yogourt 16
+;
+Recette0 ;
+Recette0 : 1
+ananas 13
+carotteriz 10
+céleri 11
+framboises 34
+kiwi 11
+lait 30
+persil 18
+pommes 16
+raisins 11
+romarin 9
+tomate 15
+yogourt 14
+;
+</pre>
+[...]
+</td>
+</tr>
+</table>
+
+
+
+
+<h3>Simplifications et hypothèses</h3>
+<p>
+Pour simplifier le problème, on assume les hypothèses suivantes :
+</p>
+<ol>
+<li>Les quantités sont exprimées dans une unité de mesure implicite (ex.: unités, grammes, millilitres, etc.).</li>
+<li>Les quantités sont représentables par des entiers de type <code>int</code>;</li>
+<li>Le réfrigérateur à une capacité infini (aucune gestion d'espace).</li>
+</ol>
+
+<!--
+<h3>Algorithme</h3>
+<p>
+Lorsque les transactions arrivent en <b>ordre strictement chronologique</b>, l'algorithme suivant peut être utilisé.
+</p>
+
+<blockquote>
+<pre>
+inventaire = créer un inventaire vide
+recettes = créer un objet associatif (dictionnaire) de recettes
+numéro_commande = 0
+date = -1
+tant que l'entrée est valide // while(*entrer)
+    lire typeevent
+    selon typeevent :
+        cas "recette" :
+            lire nom_recette
+            lire liste_ingrédients_avec_quantités
+            recettes[nom_recette] = liste_ingrédients_avec_quantités
+        cas "reception" :
+            lire date_réception
+            assert(date_réception > date)
+            date = date_réception
+            lire liste_ingrédients_avec_quantités_et_dates_expiration
+            inventaire += liste_ingrédients_avec_quantités_et_dates_expiration
+        cas "reservation" :
+            lire date_préparation
+            assert(date_préparation > date)
+            date = date_préparation
+            lire commande
+            calculer ingrédients_requis pour commande
+            liquider l'inventaire des ingrédients périmés (tout stock avec date_expiration<=date_préparation)
+            si ingrédients_requis <= inventaire
+                inventaire -= ingrédients_requis
+                afficher numéro_commande " : OK" 
+            else
+                afficher numéro_commande " : Echec" 
+            numéro_commande++
+</pre>
+</blockquote>
+-->
+
+<h2>Contraintes</h2>
+
+<h3>Bibliothèques autorisées</h3>
+<p>Vous devez implémenter et utiliser vos propres structures de données. Seul <code>std::vector</code> de la bibliothèque standard de C++ est autorisé.</p>
+
+
+<h3>Environnement de développement</h3>
+<p>
+Votre TP2 doit pouvoir être compilé avec g++ version 12 (version installée sur le serveur <tt>java.labunix.uqam.ca</tt>).
+</p>
+
+<h3>Taille des équipes</h3>
+<p>
+Vous pouvez faire ce travail en équipe de 1 ou 2.
+Toutefois, tous les membres de l'équipe doivent contribuer à l'ensemble du travail et non à seulement quelques parties.
+Le travail d'équipe vise à favoriser les discussions et l'entraide.
+Le travail d'équipe ne vise pas à réduire la tâche.
+Ainsi, se diviser la tâche en deux n'est pas une méthode de travail d'équipe appropriée dans ce cours.
+La participation inadéquate des membres de l'équipe peut être considérée comme du plagiat.
+Le professeur et le correcteur pourront sélectionner quelques équipes au hasard afin de vérifier que tous les membres sont capables d'expliquer l'ensemble du travail.
+</p>
+
+
+<h2>Tests et auto-évaluation</h2>
+<p>
+    Après avoir décompressé le fichier <a href="evaluate.zip">evaluate.zip</a>, tapez la commande suivante dans la console pour évaluer votre tp2 : 
+    <pre>./evaluate ./tp2 100_1000.txt</pre> <br>
+    
+</p>
+
+<h2>Remise</h2>
+<p>
+Vous devez remettre votre travail au plus tard le <b>10 novembre 2024 à 23h59m59s</b> par Moodle.
+
+<p>Fichiers à remettre:</p>
+<ol>
+<li>
+<b>tp2-src.zip</b> : fichier ZIP contenant tous vos fichiers sources (<tt>*.{h,cpp}</tt>), votre fichier <tt>Makefile</tt> et <b>rapport.pdf</b>.
+</li>
+<li>
+Votre fichier <b>rapport.pdf</b> contenu dans le zip contient :
+<ol type="i">
+<li><b>Analyse de la complexité temporelle (pire cas) en notation grand O</b> pour chaque commande.
+  Les complexités temporelles devraient être exprimées en fonction d'une ou plusieurs variables.
+  </li>
+</ol>
+
+</p>
+
+
+
+
+
+
+<h2>Évaluation</h2>
+<p>
+Ce travail pratique vaut 15% de la note finale.
+</p>
+
+<h3>Grille de correction</h3>
+
+<table border="1" cellpadding="2" cellspacing="1">
+ <tr valign="top">
+  <th><b>Critère</th>
+  <th><b>Description</th>
+  <th><b>Pondération</th>
+ </tr>
+ <tr valign="top">
+  <td>A.</td>
+  <td><b>Respect des directives pour la remise</b>
+   <ul>
+      <li>Fichiers sources (Makefile, .h, .cpp) seulement. Aucun fichier binaire (.o, exécutable). Aucun fichier test.</li>
+      <li>Remise adéquate via Moodle.</li>
+      <li>Compilable avec <tt>make</tt> sans modifications.</li>
+      <li>Exécutable sans modifications.</li>
+    </ul>
+  </td>
+  <td align="center">/ 2</td>
+ </tr> 
+ <tr valign="top">
+  <td>B.</td>
+  <td><b>Appréciation générale</b>
+   <ul>
+      <li>Structure du programme + Qualité du code :</li>
+      <ul>
+        <li>Choix des types de données; identificateurs (noms)
+          significatifs, lisibilité du code, pertinence des
+          commentaires; etc.</li>
+        <li>Justesse de l'usage du mot clé <tt>const</tt>, des
+          références (&amp;) et des pointeurs (*).</li>
+      </ul>
+      <li>Encapsulation : <br>
+      </li>
+      <ul>
+        <li>Respect des principes de l'abstraction; utilisation
+          appropriée de <tt>public</tt>, <tt>private</tt><tt>,</tt>
+          <tt>friend</tt>, etc.</li>
+        <li>Cachez le maximum de la représentation des objets en
+          rendant un maximum d'attributs privés;</li>
+        <li>Évitez autant que possible les bris d'abstraction, comme des <i>getters</i>
+          et <i>setters</i> qui retournent ou affectent
+          directement des attributs d'un type abstrait de
+          donnée.
+        </li>
+      </ul>
+      <li>Gestion de la mémoire : <br>
+      </li>
+      <ul>
+        <li>Toute la mémoire allouée dynamiquement doit être
+          correctement libérée au moment approprié et avant la
+          fin du programme.</li>
+      </ul>
+    </ul>  
+  </td>
+  <td align="center">/ 3</td>
+ </tr> 
+ <tr valign="top">
+  <td>C.</td>
+  <td><b>Fonctionnement correct du stock</b><br>
+  <p>
+    Un programme gère toute les commandes à l'exception de « recommandation ».
+  </p>
+  </td>
+  <td align="center">/ 6</td>
+ </tr>
+ <tr valign="top">
+  <td>D.</td>
+  <td><b>Fonctionnement correct de « recommandation »</b>
+  </td>
+  <td align="center">/ 4</td>
+ </tr>
+ <tr valign="top">
+  <td>E.</td>
+  <td><b>Analyse de l'algorithme</b>
+   <ul>
+      <li>Variables caractérisant la taille du problème et influençant le temps d'exécution.</li>
+      <li>Analyse de la complexité temporelle avec résultats et justifications.</li>
+    </ul>
+  </td>
+  <td align="center">/ 2</td>
+ </tr>
+ <tr valign="top">
+  <td>F.</td>
+  <td><b>Efficacité</b>
+   <ul>
+      <li>Le programme utilise judicieusement les arbres binaires de recherche et les map permettant.</li>
+      <li>Chaque commande est exécutée avec un temps d'exécution minimal.</li>
+    </ul>
+    <p>
+    N'oubliez pas d'activer l'option <tt>-O2</tt> dans votre <tt>Makefile</tt> avant la remise.
+    </p>
+  </td>
+  <td align="center">/ 3</td>
+ </tr> 
+ <tr bgcolor="lightgray" valign="top">
+  <td></td>
+  <td align="right">Total : </td>
+  <td align="center">20 / 20</td>
+ </tr>
+ <tr valign="top">
+  <td>G.</td>
+  <td><b>Pénalité : Utilisation de la STL autre que std::vector</b>
+  <p>
+  Un des objectifs du TP2 est d'implémenter l'arbre AVL tel que présenté en classe et dans les notes de cours.
+  À noter que les Lab5 et Lab6 viseront à compléter l'implémentation d'un arbre AVL.
+  Si vous éprouvez des difficultés à réaliser votre propre implémentation d'arbre AVL,
+  il est permis d'utiliser les conteneurs <tt>set</tt> et <tt>map</tt> de la bibliothèque standard de C++.
+  Toutefois, une pénalité de 3 points sera appliquée.
+  </p>
+  </td>
+  <td align="center">- 3</td>
+ </tr>
+
+
+
+</table>
+
+<p>
+* Bien que les critères C, D visent le fonctionnement correct en premier lieu, l'efficacité peut être indirectement évaluée lorsqu'un programme ne parvient pas à produire des résultats dans des délais raisonnables.
+</p>
+
+</div>
+
+
+</body>
+</html>
+

@@ -1,0 +1,28 @@
+ananas 13
+carotteriz 13
+céleri 11
+framboises 34
+kiwi 11
+lait 33
+persil 18
+pommes 16
+raisins 11
+romarin 10
+tomate 16
+yogourt 16
+;
+Recette0 ;
+Recette0 : 1
+ananas 13
+carotteriz 10
+céleri 11
+framboises 34
+kiwi 11
+lait 30
+persil 18
+pommes 16
+raisins 11
+romarin 9
+tomate 15
+yogourt 14
+;

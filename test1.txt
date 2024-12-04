@@ -1,0 +1,10 @@
+recette burger pain_burger 1 tranche_fromage 1 steak_hache 1 ;
+recette boulette steak_hache 2 ognon 1 ;
+ajout steak_hache 10 2021-12-01
+ajout ognon 5 2021-11-01
+ajout pain_burger 10 2021-11-20
+ajout ognon 5 2021-12-25
+ajout tranche_fromage 10 2021-11-10
+recommandation
+utilisation boulette
+affichage
